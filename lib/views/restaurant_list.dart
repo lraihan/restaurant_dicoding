@@ -175,7 +175,7 @@ class RestaurantList extends StatelessWidget {
                     );
                   }
 
-                  return Container(); // Fallback in case of unexpected state
+                  return Container(); 
                 },
               ),
             ),
