@@ -270,7 +270,7 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
             );
           }
 
-          return Container(); // Fallback in case of unexpected state
+          return Container();
         },
       ),
     );
