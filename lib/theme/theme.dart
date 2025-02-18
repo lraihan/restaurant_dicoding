@@ -27,7 +27,7 @@ ThemeData buildTheme(Brightness brightness, ThemeProvider provider) {
             primary: primaryColor,
             secondary: secondaryColor,
           ),
-    fontFamily: 'Plus Jakarta Sans',
+    fontFamily: 'PlusJakartaSans',
     textTheme: const TextTheme(
       displayLarge: AppTextStyle.heading1,
       displayMedium: AppTextStyle.heading1,

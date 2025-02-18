@@ -8,10 +8,12 @@ class RestaurantProvider with ChangeNotifier {
   final ApiService apiService = ApiService();
   Resource<List<Restaurant>> _restaurants = Loading();
   Map<String, dynamic>? _restaurantDetail;
+  Resource<Restaurant> _restaurantDetailResource = Loading();
   bool _isLoading = false;
 
   Resource<List<Restaurant>> get restaurants => _restaurants;
   Map<String, dynamic>? get restaurantDetail => _restaurantDetail;
+  Resource<Restaurant> get restaurantDetailResource => _restaurantDetailResource;
   bool get isLoading => _isLoading;
 
   Future<void> fetchRestaurants(BuildContext context) async {
@@ -31,15 +33,16 @@ class RestaurantProvider with ChangeNotifier {
   }
 
   Future<void> fetchRestaurantDetail(String restaurantId, BuildContext context) async {
-    _isLoading = true;
+    _restaurantDetailResource = Loading();
     notifyListeners();
 
     try {
-      _restaurantDetail = await apiService.getRestaurantDetail(restaurantId, context);
+      final data = await apiService.getRestaurantDetail(restaurantId, context);
+      _restaurantDetailResource = Success(Restaurant.fromJson(data));
     } catch (e) {
+      _restaurantDetailResource = Error(e.toString());
       CustomSnackbar.showSnackbar(context, 'Failed to fetch restaurant details: $e');
     } finally {
-      _isLoading = false;
       notifyListeners();
     }
   }

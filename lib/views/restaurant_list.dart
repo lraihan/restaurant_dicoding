@@ -32,7 +32,7 @@ class RestaurantList extends StatelessWidget {
               children: [
                 Text(
                   'Restaurants you may like..',
-                  style: Theme.of(context).textTheme.titleLarge,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 IconButton(
                   icon: Icon(Icons.settings),
@@ -175,7 +175,7 @@ class RestaurantList extends StatelessWidget {
                     );
                   }
 
-                  return Container(); 
+                  return Container();
                 },
               ),
             ),

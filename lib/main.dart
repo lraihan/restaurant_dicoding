@@ -8,6 +8,7 @@ import 'package:restaurant_app_dicoding/views/restaurant_list.dart';
 import 'package:restaurant_app_dicoding/theme/theme.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
   runApp(
