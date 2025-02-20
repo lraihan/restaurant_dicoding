@@ -105,6 +105,27 @@ class RestaurantList extends StatelessWidget {
                                                 themeProvider.setNotificationTime(picked);
                                                 await NotificationService().scheduleDailyNotification(
                                                     context: context, id: 0, time: themeProvider.notificationTime);
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (BuildContext context) {
+                                                    return AlertDialog(
+                                                      title: Text('Notification Set',
+                                                          style: Theme.of(context).textTheme.titleMedium),
+                                                      content: Text(
+                                                        'Lunch notification set at ${picked.format(context)}',
+                                                        style: Theme.of(context).textTheme.bodyLarge,
+                                                      ),
+                                                      actions: <Widget>[
+                                                        TextButton(
+                                                          child: Text('OK'),
+                                                          onPressed: () {
+                                                            Navigator.of(context).pop();
+                                                          },
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
                                               }
                                             },
                                           ),
