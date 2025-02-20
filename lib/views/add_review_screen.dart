@@ -70,7 +70,6 @@ class AddReviewScreen extends StatelessWidget {
                           onReviewAdded();
                           await Provider.of<RestaurantProvider>(context, listen: false)
                               .fetchRestaurantDetail(restaurantId, context);
-                          Navigator.pop(context);
                         }
                       },
                       child: Text('Submit'),

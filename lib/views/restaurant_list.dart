@@ -8,6 +8,8 @@ import 'package:restaurant_app_dicoding/views/restaurant_detail.dart';
 import 'package:restaurant_app_dicoding/views/search_result.dart';
 import 'package:restaurant_app_dicoding/widgets/color_picker_dialog.dart';
 import '../models/resource.dart';
+import 'package:restaurant_app_dicoding/views/favorite_restaurants.dart';
+import 'package:restaurant_app_dicoding/services/notification_service.dart';
 
 class RestaurantList extends StatelessWidget {
   const RestaurantList({super.key});
@@ -19,6 +21,7 @@ class RestaurantList extends StatelessWidget {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       restaurantProvider.fetchRestaurants(context);
+      NotificationService().requestPermission(context); // Request notification permission on app startup
     });
 
     return Scaffold(
@@ -34,38 +37,127 @@ class RestaurantList extends StatelessWidget {
                   'Restaurants you may like..',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                IconButton(
-                  icon: Icon(Icons.settings),
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return Padding(
-                          padding: EdgeInsets.symmetric(vertical: verticalPadding(context)),
-                          child: ListView(
-                            children: [
-                              _buildThemeModeRadio(ThemeMode.system, 'System Theme', context),
-                              _buildThemeModeRadio(ThemeMode.light, 'Light Theme', context),
-                              _buildThemeModeRadio(ThemeMode.dark, 'Dark Theme', context),
-                              SwitchListTile(
-                                title: const Text('Use Seed Color'),
-                                value: themeProvider.useSeedColor,
-                                onChanged: (value) => themeProvider.toggleSeedColor(value),
-                              ),
-                              if (themeProvider.useSeedColor)
-                                ListTile(
-                                  title: const Text('Select Seed Color'),
-                                  trailing: ColorPickerButton(
-                                    initialColor: themeProvider.seedColor,
-                                    onColorChanged: (color) => themeProvider.setSeedColor(color),
-                                  ),
-                                ),
-                            ],
+                Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.favorite),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FavoriteRestaurants(),
                           ),
                         );
                       },
-                    );
-                  },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.settings),
+                      onPressed: () {
+                        showModalBottomSheet(
+                          showDragHandle: true,
+                          context: context,
+                          builder: (context) {
+                            return Padding(
+                              padding: EdgeInsets.symmetric(vertical: verticalPadding(context)),
+                              child: ListView(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: horizontalPadding(context),
+                                    ),
+                                    child: Text(
+                                      'Settings',
+                                      style: Theme.of(context).textTheme.titleMedium,
+                                    ),
+                                  ),
+                                  SwitchListTile(
+                                    title: const Text('Enable Notification'),
+                                    value: themeProvider.notificationsEnabled,
+                                    inactiveThumbColor: blackColor,
+                                    inactiveTrackColor: blackColor.shade200,
+                                    onChanged: (value) async {
+                                      themeProvider.toggleNotifications(value);
+                                      if (value) {
+                                        await NotificationService().scheduleDailyNotification(
+                                            context: context, id: 0, time: themeProvider.notificationTime);
+                                      } else {
+                                        await NotificationService().flutterLocalNotificationsPlugin.cancelAll();
+                                      }
+                                    },
+                                  ),
+                                  if (themeProvider.notificationsEnabled)
+                                    Column(
+                                      children: [
+                                        ListTile(
+                                          title: const Text('Set Lunch Notification Time'),
+                                          subtitle: Text(
+                                            themeProvider.notificationTime.format(context),
+                                            style: Theme.of(context).textTheme.titleMedium,
+                                          ),
+                                          trailing: IconButton(
+                                            icon: Icon(Icons.access_time),
+                                            onPressed: () async {
+                                              final TimeOfDay? picked = await showTimePicker(
+                                                context: context,
+                                                initialTime: themeProvider.notificationTime,
+                                              );
+                                              if (picked != null) {
+                                                themeProvider.setNotificationTime(picked);
+                                                await NotificationService().scheduleDailyNotification(
+                                                    context: context, id: 0, time: themeProvider.notificationTime);
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                        ListTile(
+                                          title: const Text('Test Notification'),
+                                          trailing: ElevatedButton(
+                                            onPressed: () async {
+                                              await NotificationService().showNotification(context);
+                                            },
+                                            child: const Text('Show Now'),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  SizedBox(
+                                    height: verticalPadding(context),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: horizontalPadding(context),
+                                    ),
+                                    child: Text(
+                                      'Theme Settings',
+                                      style: Theme.of(context).textTheme.titleMedium,
+                                    ),
+                                  ),
+                                  _buildThemeModeRadio(ThemeMode.system, 'System Theme', context),
+                                  _buildThemeModeRadio(ThemeMode.light, 'Light Theme', context),
+                                  _buildThemeModeRadio(ThemeMode.dark, 'Dark Theme', context),
+                                  SwitchListTile(
+                                    title: const Text('Use Seed Color'),
+                                    value: themeProvider.useSeedColor,
+                                    inactiveThumbColor: blackColor,
+                                    inactiveTrackColor: blackColor.shade200,
+                                    onChanged: (value) => themeProvider.toggleSeedColor(value),
+                                  ),
+                                  if (themeProvider.useSeedColor)
+                                    ListTile(
+                                      title: const Text('Select Seed Color'),
+                                      trailing: ColorPickerButton(
+                                        initialColor: themeProvider.seedColor,
+                                        onColorChanged: (color) => themeProvider.setSeedColor(color),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),

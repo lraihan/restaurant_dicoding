@@ -91,9 +91,6 @@ class ApiService {
 
   Future<Map<String, dynamic>> getRestaurantDetail(String id, BuildContext context) async {
     final cacheKey = 'restaurant_detail_$id';
-    if (_dataCache.containsKey(cacheKey)) {
-      return _dataCache[cacheKey];
-    }
 
     try {
       final response = await _dio.get('/detail/$id');

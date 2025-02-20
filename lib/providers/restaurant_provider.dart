@@ -2,19 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:restaurant_app_dicoding/services/api_services.dart';
 import 'package:restaurant_app_dicoding/models/restaurant_model.dart';
 import 'package:restaurant_app_dicoding/widgets/snackbar.dart';
+import 'package:restaurant_app_dicoding/services/database_helper.dart';
 import '../models/resource.dart';
 
 class RestaurantProvider with ChangeNotifier {
   final ApiService apiService = ApiService();
+  final DatabaseHelper _dbHelper = DatabaseHelper();
   Resource<List<Restaurant>> _restaurants = Loading();
   Map<String, dynamic>? _restaurantDetail;
   Resource<Restaurant> _restaurantDetailResource = Loading();
   bool _isLoading = false;
+  List<Restaurant> _favorites = [];
+
+  RestaurantProvider() {
+    _loadFavorites();
+  }
 
   Resource<List<Restaurant>> get restaurants => _restaurants;
   Map<String, dynamic>? get restaurantDetail => _restaurantDetail;
   Resource<Restaurant> get restaurantDetailResource => _restaurantDetailResource;
   bool get isLoading => _isLoading;
+  List<Restaurant> get favorites => _favorites;
 
   Future<void> fetchRestaurants(BuildContext context) async {
     _isLoading = true;
@@ -61,5 +69,26 @@ class RestaurantProvider with ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  Future<void> _loadFavorites() async {
+    _favorites = await _dbHelper.getFavorites();
+    notifyListeners();
+  }
+
+  Future<void> addFavorite(Restaurant restaurant) async {
+    await _dbHelper.insertFavorite(restaurant);
+    _favorites.add(restaurant);
+    notifyListeners();
+  }
+
+  Future<void> removeFavorite(Restaurant restaurant) async {
+    await _dbHelper.deleteFavorite(restaurant.id!);
+    _favorites.removeWhere((item) => item.id == restaurant.id);
+    notifyListeners();
+  }
+
+  bool isFavorite(Restaurant restaurant) {
+    return _favorites.any((item) => item.id == restaurant.id);
   }
 }
