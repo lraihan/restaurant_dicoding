@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app_dicoding/providers/restaurant_provider.dart';
 import 'package:restaurant_app_dicoding/providers/theme_provider.dart';
+import 'package:restaurant_app_dicoding/services/workmanager_service.dart';
 import 'package:restaurant_app_dicoding/shared/consts.dart';
 import 'package:restaurant_app_dicoding/theme/colors.dart';
 import 'package:restaurant_app_dicoding/views/restaurant_detail.dart';
@@ -54,8 +55,10 @@ class RestaurantList extends StatelessWidget {
                       icon: Icon(Icons.settings),
                       onPressed: () {
                         showModalBottomSheet(
+                          isScrollControlled: false,
                           showDragHandle: true,
                           context: context,
+                          scrollControlDisabledMaxHeightRatio: 0.75,
                           builder: (context) {
                             return Padding(
                               padding: EdgeInsets.symmetric(vertical: verticalPadding(context)),
@@ -78,9 +81,10 @@ class RestaurantList extends StatelessWidget {
                                     onChanged: (value) async {
                                       themeProvider.toggleNotifications(value);
                                       if (value) {
-                                        await NotificationService().scheduleDailyNotification(
-                                            context: context, id: 0, time: themeProvider.notificationTime);
+                                        await Provider.of<WorkmanagerService>(context, listen: false)
+                                            .runOneOffTask(context);
                                       } else {
+                                        await Provider.of<WorkmanagerService>(context, listen: false).cancelAllTask();
                                         await NotificationService().flutterLocalNotificationsPlugin.cancelAll();
                                       }
                                     },
@@ -103,8 +107,12 @@ class RestaurantList extends StatelessWidget {
                                               );
                                               if (picked != null) {
                                                 themeProvider.setNotificationTime(picked);
-                                                await NotificationService().scheduleDailyNotification(
-                                                    context: context, id: 0, time: themeProvider.notificationTime);
+
+                                                await Provider.of<WorkmanagerService>(context, listen: false)
+                                                    .cancelAllTask();
+                                                await Provider.of<WorkmanagerService>(context, listen: false)
+                                                    .runOneOffTask(context);
+
                                                 showDialog(
                                                   context: context,
                                                   builder: (BuildContext context) {
@@ -134,7 +142,7 @@ class RestaurantList extends StatelessWidget {
                                           title: const Text('Test Notification'),
                                           trailing: ElevatedButton(
                                             onPressed: () async {
-                                              await NotificationService().showNotification(context);
+                                              await NotificationService().showNotification();
                                             },
                                             child: const Text('Show Now'),
                                           ),

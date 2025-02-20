@@ -65,7 +65,7 @@ class ApiService {
     throw Exception(errorMessage);
   }
 
-  Future<List<dynamic>> getListOfRestaurants(BuildContext context) async {
+  Future<List<dynamic>> getListOfRestaurants(BuildContext? context) async {
     const cacheKey = 'restaurant_list';
     if (_dataCache.containsKey(cacheKey)) {
       return _dataCache[cacheKey];
@@ -77,13 +77,19 @@ class ApiService {
         _dataCache[cacheKey] = response.data['restaurants'];
         return response.data['restaurants'];
       } else {
-        CustomSnackbar.showSnackbar(context, 'Failed to load restaurants');
+        if (context != null) {
+          CustomSnackbar.showSnackbar(context, 'Failed to load restaurants');
+        }
         throw Exception('Failed to load restaurants');
       }
     } on DioException catch (error) {
-      _handleError(error, context);
+      if (context != null) {
+        _handleError(error, context);
+      }
     } catch (e) {
-      CustomSnackbar.showSnackbar(context, 'Failed to load restaurants: $e');
+      if (context != null) {
+        CustomSnackbar.showSnackbar(context, 'Failed to load restaurants: $e');
+      }
       throw Exception('Failed to load restaurants: $e');
     }
     return [];

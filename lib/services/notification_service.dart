@@ -1,10 +1,10 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'dart:math';
-import 'package:restaurant_app_dicoding/services/api_services.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -44,7 +44,7 @@ class NotificationService {
     }
   }
 
-  Future<void> showNotification(BuildContext context) async {
+  Future<void> showNotification() async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
       '1',
       'lunch notification',
@@ -54,9 +54,9 @@ class NotificationService {
     );
 
     // Fetch random restaurant name
-    final apiService = ApiService();
-    final restaurants = await apiService.getListOfRestaurants(context);
-    final randomRestaurant = restaurants[Random().nextInt(restaurants.length)];
+    final dio = Dio();
+    final restaurants = await dio.get('https://restaurant-api.dicoding.dev/list');
+    final randomRestaurant = restaurants.data['restaurants'][Random().nextInt(restaurants.data['restaurants'].length)];
     final restaurantName = randomRestaurant['name'];
     final restaurantAddress = randomRestaurant['city'];
 
@@ -99,11 +99,12 @@ class NotificationService {
 
   Future<void> scheduleDailyNotification({
     required int id,
-    required TimeOfDay time,
-    required BuildContext context,
+    required String time,
     String channelId = "3",
     String channelName = "Schedule Notification",
   }) async {
+    TimeOfDay scheduledTime = TimeOfDay(hour: int.parse(time.split(":")[0]), minute: int.parse(time.split(":")[1]));
+
     final androidPlatformChannelSpecifics = AndroidNotificationDetails(
       channelId,
       channelName,
@@ -118,12 +119,12 @@ class NotificationService {
       iOS: iOSPlatformChannelSpecifics,
     );
 
-    final datetimeSchedule = _nextScheduled(time);
+    final datetimeSchedule = _nextScheduled(scheduledTime);
 
     // Fetch random restaurant name
-    final apiService = ApiService();
-    final restaurants = await apiService.getListOfRestaurants(context);
-    final randomRestaurant = restaurants[Random().nextInt(restaurants.length)];
+    final dio = Dio();
+    final restaurants = await dio.get('https://restaurant-api.dicoding.dev/list');
+    final randomRestaurant = restaurants.data['restaurants'][Random().nextInt(restaurants.data['restaurants'].length)];
     final restaurantName = randomRestaurant['name'];
     final restaurantAddress = randomRestaurant['city'];
 

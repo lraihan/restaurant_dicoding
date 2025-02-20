@@ -3,10 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:restaurant_app_dicoding/providers/restaurant_provider.dart';
 import 'package:restaurant_app_dicoding/providers/theme_provider.dart';
 import 'package:restaurant_app_dicoding/providers/review_provider.dart';
+import 'package:restaurant_app_dicoding/services/workmanager_service.dart';
 import 'package:restaurant_app_dicoding/views/restaurant_list.dart';
 import 'package:restaurant_app_dicoding/theme/theme.dart';
 import 'package:restaurant_app_dicoding/services/notification_service.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 void main() async {
@@ -27,19 +27,12 @@ void main() async {
         );
   }
 
-  // Print all permission statuses
-  Map<Permission, PermissionStatus> statuses = await [
-    Permission.notification,
-    Permission.scheduleExactAlarm,
-  ].request();
-
-  statuses.forEach((permission, status) {
-    print('Permission: $permission, Status: $status');
-  });
-
   runApp(
     MultiProvider(
       providers: [
+        Provider(
+          create: (context) => WorkmanagerService()..init(),
+        ),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => RestaurantProvider()),
         ChangeNotifierProvider(create: (_) => ReviewProvider()),
@@ -61,8 +54,24 @@ class MyApp extends StatelessWidget {
       theme: buildTheme(Brightness.light, themeProvider),
       darkTheme: buildTheme(Brightness.dark, themeProvider),
       themeMode: themeProvider.themeMode,
-      home: RestaurantList(),
+      home: FutureBuilder(
+        future: _checkPendingNotifications(context),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else {
+            return RestaurantList();
+          }
+        },
+      ),
       debugShowCheckedModeBanner: false,
     );
+  }
+
+  Future<void> _checkPendingNotifications(BuildContext context) async {
+    final pendingNotifications = await NotificationService().pendingNotificationRequests();
+    if (pendingNotifications.isEmpty) {
+      await Provider.of<WorkmanagerService>(context, listen: false).runOneOffTask(context);
+    }
   }
 }
