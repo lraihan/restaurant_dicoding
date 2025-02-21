@@ -6,7 +6,7 @@ import 'package:restaurant_app_dicoding/services/database_helper.dart';
 import '../models/resource.dart';
 
 class RestaurantProvider with ChangeNotifier {
-  final ApiService apiService = ApiService();
+  ApiService apiService = ApiService();
   final DatabaseHelper _dbHelper = DatabaseHelper();
   Resource<List<Restaurant>> _restaurants = Loading();
   Map<String, dynamic>? _restaurantDetail;
@@ -24,7 +24,7 @@ class RestaurantProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   List<Restaurant> get favorites => _favorites;
 
-  Future<void> fetchRestaurants(BuildContext context) async {
+  Future<void> fetchRestaurants(BuildContext? context) async {
     _isLoading = true;
     notifyListeners();
 
@@ -33,7 +33,9 @@ class RestaurantProvider with ChangeNotifier {
       _restaurants = Success(data.map((item) => Restaurant.fromJson(item)).toList());
     } catch (e) {
       _restaurants = Error(e.toString());
-      CustomSnackbar.showSnackbar(context, 'Failed to load restaurants: $e');
+      if (context != null) {
+        CustomSnackbar.showSnackbar(context, 'Failed to load restaurants: $e');
+      }
     } finally {
       _isLoading = false;
       notifyListeners();
