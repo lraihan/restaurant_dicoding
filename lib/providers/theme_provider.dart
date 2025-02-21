@@ -6,7 +6,7 @@ class ThemeProvider extends ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.system;
   Color _seedColor = primaryColor;
   bool _useSeedColor = false;
-  bool _notificationsEnabled = true;
+  bool _notificationsEnabled = false;
   TimeOfDay _notificationTime = TimeOfDay(hour: 11, minute: 0);
 
   ThemeMode get themeMode => _themeMode;

@@ -1,30 +1,45 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:provider/provider.dart';
+import 'package:restaurant_app_dicoding/providers/restaurant_provider.dart';
+import 'package:restaurant_app_dicoding/providers/theme_provider.dart';
+import 'package:restaurant_app_dicoding/services/api_services.dart';
+import 'package:restaurant_app_dicoding/views/search_result.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import 'package:restaurant_app_dicoding/main.dart';
+class MockApiService extends Mock implements ApiService {}
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  TestWidgetsFlutterBinding.ensureInitialized();
+  databaseFactory = databaseFactoryFfi;
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  testWidgets(
+    'SearchResult displays search results',
+    (WidgetTester tester) async {
+      final mockApiService = MockApiService();
+      final restaurantProvider = RestaurantProvider()..apiService = mockApiService;
+      final themeProvider = ThemeProvider();
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+      when(() => mockApiService.searchRestaurants('query', any())).thenAnswer((_) async => [
+            {'id': '1', 'name': 'Restaurant 1', 'city': 'City 1', 'description': 'Description 1'},
+          ]);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
-  });
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider.value(value: restaurantProvider),
+            ChangeNotifierProvider.value(value: themeProvider),
+          ],
+          child: MaterialApp(
+            home: SearchResult(query: 'query'),
+          ),
+        ),
+      );
+
+      await tester.pump();
+
+      expect(find.text('Restaurant 1'), findsWidgets);
+    },
+  );
 }

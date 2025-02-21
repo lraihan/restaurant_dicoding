@@ -42,7 +42,7 @@ class RestaurantProvider with ChangeNotifier {
     }
   }
 
-  Future<void> fetchRestaurantDetail(String restaurantId, BuildContext context) async {
+  Future<void> fetchRestaurantDetail(String restaurantId, BuildContext? context) async {
     _restaurantDetailResource = Loading();
     notifyListeners();
 
@@ -51,13 +51,15 @@ class RestaurantProvider with ChangeNotifier {
       _restaurantDetailResource = Success(Restaurant.fromJson(data));
     } catch (e) {
       _restaurantDetailResource = Error(e.toString());
-      CustomSnackbar.showSnackbar(context, 'Failed to fetch restaurant details: $e');
+      if (context != null) {
+        CustomSnackbar.showSnackbar(context, 'Failed to fetch restaurant details: $e');
+      }
     } finally {
       notifyListeners();
     }
   }
 
-  Future<void> searchRestaurants(String query, BuildContext context) async {
+  Future<void> searchRestaurants(String query, BuildContext? context) async {
     _isLoading = true;
     notifyListeners();
 
@@ -66,7 +68,9 @@ class RestaurantProvider with ChangeNotifier {
       _restaurants = Success(data.map((item) => Restaurant.fromJson(item)).toList());
     } catch (e) {
       _restaurants = Error(e.toString());
-      CustomSnackbar.showSnackbar(context, 'Failed to search restaurants: $e');
+      if (context != null) {
+        CustomSnackbar.showSnackbar(context, 'Failed to search restaurants: $e');
+      }
     } finally {
       _isLoading = false;
       notifyListeners();

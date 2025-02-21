@@ -53,7 +53,6 @@ class NotificationService {
       showWhen: true,
     );
 
-    // Fetch random restaurant name
     final dio = Dio();
     final restaurants = await dio.get('https://restaurant-api.dicoding.dev/list');
     final randomRestaurant = restaurants.data['restaurants'][Random().nextInt(restaurants.data['restaurants'].length)];
@@ -121,7 +120,6 @@ class NotificationService {
 
     final datetimeSchedule = _nextScheduled(scheduledTime);
 
-    // Fetch random restaurant name
     final dio = Dio();
     final restaurants = await dio.get('https://restaurant-api.dicoding.dev/list');
     final randomRestaurant = restaurants.data['restaurants'][Random().nextInt(restaurants.data['restaurants'].length)];

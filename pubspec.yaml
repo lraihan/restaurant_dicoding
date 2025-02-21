@@ -1,6 +1,6 @@
 name: restaurant_app_dicoding
 description: "A dicoding flutter submission project."
-publish_to: 'none' 
+publish_to: "none"
 
 version: 1.0.0+1
 
@@ -21,9 +21,9 @@ dependencies:
   path: ^1.8.0
   flutter_local_notifications: ^18.0.1
   workmanager:
-   git:
-     url: https://github.com/fluttercommunity/flutter_workmanager.git
-     ref: b783000
+    git:
+      url: https://github.com/fluttercommunity/flutter_workmanager.git
+      ref: b783000
   permission_handler: ^11.3.1
   flutter_timezone: ^4.1.0
   timezone: ^0.10.0
@@ -32,6 +32,8 @@ dependencies:
 dev_dependencies:
   test: ^1.25.2
   mocktail: ^1.0.4
+  integration_test:
+    sdk: flutter
   flutter_test:
     sdk: flutter
 

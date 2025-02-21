@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:restaurant_app_dicoding/providers/restaurant_provider.dart';
 import 'package:restaurant_app_dicoding/providers/review_provider.dart';
 import 'package:restaurant_app_dicoding/models/restaurant_model.dart';
+import 'package:restaurant_app_dicoding/providers/theme_provider.dart';
 import 'package:restaurant_app_dicoding/shared/consts.dart';
 import 'package:restaurant_app_dicoding/views/add_review_screen.dart';
 import '../models/resource.dart';
@@ -36,6 +37,7 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Consumer<RestaurantProvider>(
@@ -101,6 +103,7 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
 
                                     return IconButton(
                                       icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border),
+                                      color: isFavorite ? themeProvider.seedColor : null,
                                       onPressed: () {
                                         if (isFavorite) {
                                           provider.removeFavorite(restaurant);
@@ -122,14 +125,18 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
                           ),
                           Row(
                             children: [
-                              Icon(Icons.location_on, size: 16),
+                              Icon(
+                                Icons.location_on,
+                                size: 20,
+                                color: themeProvider.seedColor,
+                              ),
                               SizedBox(width: 4),
                               Text(
                                 restaurant.city ?? '-',
                                 style: Theme.of(context).textTheme.titleSmall,
                               ),
                               SizedBox(width: 16),
-                              Icon(Icons.star, size: 16, color: Colors.amber),
+                              Icon(Icons.star, size: 20, color: Colors.amber),
                               SizedBox(width: 4),
                               Text(
                                 restaurant.rating?.toString() ?? '-',

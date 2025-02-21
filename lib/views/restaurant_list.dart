@@ -5,12 +5,12 @@ import 'package:restaurant_app_dicoding/providers/theme_provider.dart';
 import 'package:restaurant_app_dicoding/services/workmanager_service.dart';
 import 'package:restaurant_app_dicoding/shared/consts.dart';
 import 'package:restaurant_app_dicoding/theme/colors.dart';
-import 'package:restaurant_app_dicoding/views/restaurant_detail.dart';
 import 'package:restaurant_app_dicoding/views/search_result.dart';
 import 'package:restaurant_app_dicoding/widgets/color_picker_dialog.dart';
 import '../models/resource.dart';
 import 'package:restaurant_app_dicoding/views/favorite_restaurants.dart';
 import 'package:restaurant_app_dicoding/services/notification_service.dart';
+import 'package:restaurant_app_dicoding/widgets/restaurant_item.dart';
 
 class RestaurantList extends StatelessWidget {
   const RestaurantList({super.key});
@@ -31,6 +31,33 @@ class RestaurantList extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(
+              height: verticalPadding(context),
+            ),
+            TextField(
+              decoration: InputDecoration(
+                hintText: 'Search...',
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: themeProvider.seedColor,
+                ),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: themeProvider.seedColor, width: 2),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              onSubmitted: (query) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SearchResult(query: query),
+                  ),
+                );
+              },
+            ),
+            SizedBox(
+              height: verticalPadding(context) * .5,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -41,7 +68,10 @@ class RestaurantList extends StatelessWidget {
                 Row(
                   children: [
                     IconButton(
-                      icon: Icon(Icons.favorite),
+                      icon: Icon(
+                        Icons.favorite,
+                        color: themeProvider.seedColor,
+                      ),
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -52,7 +82,10 @@ class RestaurantList extends StatelessWidget {
                       },
                     ),
                     IconButton(
-                      icon: Icon(Icons.settings),
+                      icon: Icon(
+                        Icons.settings,
+                        color: themeProvider.seedColor,
+                      ),
                       onPressed: () {
                         showModalBottomSheet(
                           isScrollControlled: false,
@@ -190,23 +223,6 @@ class RestaurantList extends StatelessWidget {
                 ),
               ],
             ),
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'Search...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-              ),
-              onSubmitted: (query) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SearchResult(query: query),
-                  ),
-                );
-              },
-            ),
             Expanded(
               child: Consumer<RestaurantProvider>(
                 builder: (context, restaurantProvider, child) {
@@ -227,70 +243,9 @@ class RestaurantList extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final restaurant = restaurants[index];
                         final heroTag = 'restaurant-image-${restaurant.id}';
-                        return Container(
-                          margin: const EdgeInsets.symmetric(vertical: 8.0),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: blackColor.shade100),
-                            borderRadius: BorderRadius.circular(12.0),
-                          ),
-                          child: ListTile(
-                            contentPadding: EdgeInsets.symmetric(
-                                vertical: screenHeight(context) * .01, horizontal: screenWidth(context) * .02),
-                            leading: SizedBox(
-                              width: screenWidth(context) * .3,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12.0),
-                                child: restaurant.pictureId != null
-                                    ? Hero(
-                                        tag: heroTag,
-                                        child: Image.network(
-                                          'https://restaurant-api.dicoding.dev/images/medium/${restaurant.pictureId}',
-                                          fit: BoxFit.cover,
-                                          loadingBuilder:
-                                              (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                                            if (loadingProgress == null) {
-                                              return child;
-                                            } else {
-                                              return Center(
-                                                child: CircularProgressIndicator(
-                                                  value: loadingProgress.expectedTotalBytes != null
-                                                      ? loadingProgress.cumulativeBytesLoaded /
-                                                          (loadingProgress.expectedTotalBytes ?? 1)
-                                                      : null,
-                                                ),
-                                              );
-                                            }
-                                          },
-                                        ),
-                                      )
-                                    : Center(child: CircularProgressIndicator()),
-                              ),
-                            ),
-                            title: Text(restaurant.name ?? '-'),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(restaurant.city ?? '-'),
-                                Row(
-                                  children: [
-                                    Icon(Icons.star, color: Colors.amber, size: 16),
-                                    Text(restaurant.rating.toString()),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => RestaurantDetail(
-                                    restaurantId: restaurant.id!,
-                                    heroTag: heroTag,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
+                        return RestaurantItem(
+                          restaurant: restaurant,
+                          heroTag: heroTag,
                         );
                       },
                     );
