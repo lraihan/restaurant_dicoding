@@ -5,7 +5,7 @@ publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.6.1
+  sdk: ^3.7.0
 
 dependencies:
   flutter:
@@ -23,11 +23,13 @@ dependencies:
   workmanager:
     git:
       url: https://github.com/fluttercommunity/flutter_workmanager.git
-      ref: b783000
+      path: workmanager
+      ref: main
   permission_handler: ^11.3.1
   flutter_timezone: ^4.1.0
   timezone: ^0.10.0
   sqflite_common_ffi: ^2.3.4+4
+  path_provider_platform_interface: ^2.1.2
 
 dev_dependencies:
   test: ^1.25.2

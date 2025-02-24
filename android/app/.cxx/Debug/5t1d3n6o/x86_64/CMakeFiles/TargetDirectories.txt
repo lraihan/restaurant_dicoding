@@ -1,0 +1,2 @@
+/Users/lraih/Projects/flutter/restaurant_app_dicoding/android/app/.cxx/Debug/5t1d3n6o/x86_64/CMakeFiles/edit_cache.dir
+/Users/lraih/Projects/flutter/restaurant_app_dicoding/android/app/.cxx/Debug/5t1d3n6o/x86_64/CMakeFiles/rebuild_cache.dir
