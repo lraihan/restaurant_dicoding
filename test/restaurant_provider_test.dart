@@ -19,7 +19,6 @@ void main() {
   late MockApiService mockApiService;
 
   setUpAll(() async {
-    // Mock path_provider methods
     channel.setMockMethodCallHandler((MethodCall methodCall) async {
       if (methodCall.method == 'getApplicationSupportDirectory') {
         return Directory.systemTemp.path;
@@ -30,7 +29,6 @@ void main() {
       return null;
     });
 
-    // Initialize sqflite_ffi for testing
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
   });
@@ -75,5 +73,15 @@ void main() {
     expect(provider.restaurants, isA<Error>());
     expect((provider.restaurants as Error).message, errorMessage);
     expect(provider.isLoading, false);
+  });
+
+  test('add a restaurant to favorites', () async {
+    final restaurant = Restaurant(id: '1', name: 'Restaurant 1', city: 'City 1', description: 'Description 1');
+
+    await provider.addFavorite(restaurant);
+
+    print(provider.favorites);
+
+    expect(provider.favorites, contains(restaurant));
   });
 }
