@@ -1,10 +1,8 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
-import 'dart:math';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -18,25 +16,29 @@ class NotificationService {
 
   Future<void> init() async {
     configureLocalTimeZone();
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-    const InitializationSettings initializationSettings =
-        InitializationSettings(android: initializationSettingsAndroid);
+    const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
+    const InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
   Future<void> requestPermission(BuildContext context) async {
-    final bool? notificationGranted = await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-        ?.requestNotificationsPermission();
+    final bool? notificationGranted =
+        await flutterLocalNotificationsPlugin
+            .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+            ?.requestNotificationsPermission();
     if (notificationGranted == null || !notificationGranted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Notification permission is required to show lunch notifications.')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Notification permission is required to show lunch notifications.')));
     }
-    final bool? scheduleGranted = await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-        ?.requestExactAlarmsPermission();
+    final bool? scheduleGranted =
+        await flutterLocalNotificationsPlugin
+            .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+            ?.requestExactAlarmsPermission();
     if (scheduleGranted == null || !scheduleGranted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Alarms Notification permission is required to show lunch notifications.')),
@@ -44,7 +46,7 @@ class NotificationService {
     }
   }
 
-  Future<void> showNotification() async {
+  Future<void> showNotification({required String restaurantName, required String restaurantAddress}) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
       '1',
       'lunch notification',
@@ -52,12 +54,6 @@ class NotificationService {
       priority: Priority.high,
       showWhen: true,
     );
-
-    final dio = Dio();
-    final restaurants = await dio.get('https://restaurant-api.dicoding.dev/list');
-    final randomRestaurant = restaurants.data['restaurants'][Random().nextInt(restaurants.data['restaurants'].length)];
-    final restaurantName = randomRestaurant['name'];
-    final restaurantAddress = randomRestaurant['city'];
 
     const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
@@ -75,9 +71,7 @@ class NotificationService {
     tz.setLocalLocation(tz.getLocation(timeZoneName));
   }
 
-  tz.TZDateTime _nextScheduled(
-    TimeOfDay time,
-  ) {
+  tz.TZDateTime _nextScheduled(TimeOfDay time) {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
     tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, now.year, now.month, now.day, time.hour, time.minute);
     if (scheduledDate.isBefore(now)) {
@@ -99,6 +93,8 @@ class NotificationService {
   Future<void> scheduleDailyNotification({
     required int id,
     required String time,
+    required String restaurantName,
+    required String restaurantAddress,
     String channelId = "3",
     String channelName = "Schedule Notification",
   }) async {
@@ -119,12 +115,6 @@ class NotificationService {
     );
 
     final datetimeSchedule = _nextScheduled(scheduledTime);
-
-    final dio = Dio();
-    final restaurants = await dio.get('https://restaurant-api.dicoding.dev/list');
-    final randomRestaurant = restaurants.data['restaurants'][Random().nextInt(restaurants.data['restaurants'].length)];
-    final restaurantName = randomRestaurant['name'];
-    final restaurantAddress = randomRestaurant['city'];
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,

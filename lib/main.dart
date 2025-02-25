@@ -66,7 +66,10 @@ class MyApp extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final pendingNotifications = await NotificationService().pendingNotificationRequests();
     if (themeProvider.notificationsEnabled && pendingNotifications.isEmpty) {
-      await Provider.of<WorkmanagerService>(context, listen: false).runOneOffTask(context);
+      await Provider.of<WorkmanagerService>(
+        context,
+        listen: false,
+      ).runPeriodicTask(themeProvider.notificationTime.hour, themeProvider.notificationTime.minute);
     }
   }
 }

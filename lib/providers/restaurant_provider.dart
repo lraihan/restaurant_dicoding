@@ -103,7 +103,6 @@ class RestaurantProvider with ChangeNotifier {
     return _favorites.any((item) => item.id == restaurant.id);
   }
 
-  // Function to clear the restaurants list
   void clearRestaurants() {
     _restaurants = Success([]);
     notifyListeners();

@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:restaurant_app_dicoding/models/restaurant_model.dart';
 import 'package:restaurant_app_dicoding/providers/restaurant_provider.dart';
 import 'package:restaurant_app_dicoding/providers/theme_provider.dart';
 import 'package:restaurant_app_dicoding/services/workmanager_service.dart';
@@ -100,10 +103,10 @@ class RestaurantList extends StatelessWidget {
                                       onChanged: (value) async {
                                         themeProvider.toggleNotifications(value);
                                         if (value) {
-                                          await Provider.of<WorkmanagerService>(
-                                            context,
-                                            listen: false,
-                                          ).runOneOffTask(context);
+                                          await Provider.of<WorkmanagerService>(context, listen: false).runPeriodicTask(
+                                            themeProvider.notificationTime.hour,
+                                            themeProvider.notificationTime.minute,
+                                          );
                                         } else {
                                           await Provider.of<WorkmanagerService>(context, listen: false).cancelAllTask();
                                           await NotificationService().flutterLocalNotificationsPlugin.cancelAll();
@@ -136,7 +139,10 @@ class RestaurantList extends StatelessWidget {
                                                   await Provider.of<WorkmanagerService>(
                                                     context,
                                                     listen: false,
-                                                  ).runOneOffTask(context);
+                                                  ).runPeriodicTask(
+                                                    themeProvider.notificationTime.hour,
+                                                    themeProvider.notificationTime.minute,
+                                                  );
 
                                                   showDialog(
                                                     context: context,
@@ -169,7 +175,14 @@ class RestaurantList extends StatelessWidget {
                                             title: const Text('Test Notification'),
                                             trailing: ElevatedButton(
                                               onPressed: () async {
-                                                await NotificationService().showNotification();
+                                                final resource = restaurantProvider.restaurants;
+                                                final restaurants = (resource as Success).data;
+                                                final Restaurant randomRestaurant =
+                                                    restaurants[Random().nextInt(restaurants.length)];
+                                                await NotificationService().showNotification(
+                                                  restaurantName: randomRestaurant.name ?? '-',
+                                                  restaurantAddress: randomRestaurant.address ?? '-',
+                                                );
                                               },
                                               child: const Text('Show Now'),
                                             ),
