@@ -54,7 +54,7 @@ class ThemeProvider extends ChangeNotifier {
     _themeMode = ThemeMode.values[prefs.getInt('themeMode') ?? 0];
     _seedColor = Color(prefs.getInt('seedColor') ?? primaryColor.value);
     _useSeedColor = prefs.getBool('useSeedColor') ?? false;
-    _notificationsEnabled = prefs.getBool('notificationsEnabled') ?? true;
+    _notificationsEnabled = prefs.getBool('notificationsEnabled') ?? false;
     final hour = prefs.getInt('notificationHour') ?? 11;
     final minute = prefs.getInt('notificationMinute') ?? 0;
     _notificationTime = TimeOfDay(hour: hour, minute: minute);

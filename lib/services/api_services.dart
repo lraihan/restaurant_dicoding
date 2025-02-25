@@ -11,25 +11,25 @@ class ApiService {
   final Map<String, dynamic> _dataCache = {};
 
   ApiService()
-      : _dio = Dio(
-          BaseOptions(
-            baseUrl: baseUrl,
-            connectTimeout: Duration(milliseconds: 10000),
-            receiveTimeout: Duration(milliseconds: 8000),
-          ),
-        );
+    : _dio = Dio(
+        BaseOptions(
+          baseUrl: baseUrl,
+          connectTimeout: Duration(milliseconds: 10000),
+          receiveTimeout: Duration(milliseconds: 8000),
+        ),
+      );
 
   void _handleError(DioException error, BuildContext context) {
     String errorMessage;
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
-        errorMessage = 'Connection Timeout Exception';
+        errorMessage = 'Failed to connect to the server, please try again';
         break;
       case DioExceptionType.sendTimeout:
-        errorMessage = 'Send Timeout Exception';
+        errorMessage = 'Failed to connect to the server, please try again';
         break;
       case DioExceptionType.receiveTimeout:
-        errorMessage = 'Receive Timeout Exception';
+        errorMessage = 'Failed to connect to the server, please try again';
         break;
       case DioExceptionType.badResponse:
         switch (error.response?.statusCode) {
@@ -59,7 +59,7 @@ class ApiService {
         errorMessage = 'Connection to API server failed due to internet connection';
         break;
       default:
-        errorMessage = 'Unexpected error occurred';
+        errorMessage = 'Unkown Error, please try again';
     }
     CustomSnackbar.showSnackbar(context, errorMessage);
     throw Exception(errorMessage);
@@ -143,16 +143,8 @@ class ApiService {
   Future<List<dynamic>> addReview(String id, String name, String review, BuildContext context) async {
     final response = await _dio.post(
       '/review',
-      data: {
-        'id': id,
-        'name': name,
-        'review': review,
-      },
-      options: Options(
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      ),
+      data: {'id': id, 'name': name, 'review': review},
+      options: Options(headers: {'Content-Type': 'application/json'}),
     );
     if (response.statusCode == 201) {
       return response.data['customerReviews'];

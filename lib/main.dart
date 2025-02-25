@@ -20,19 +20,13 @@ void main() async {
   } else {
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
-        ?.requestPermissions(
-          alert: true,
-          badge: true,
-          sound: true,
-        );
+        ?.requestPermissions(alert: true, badge: true, sound: true);
   }
 
   runApp(
     MultiProvider(
       providers: [
-        Provider(
-          create: (context) => WorkmanagerService()..init(),
-        ),
+        Provider(create: (context) => WorkmanagerService()..init()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => RestaurantProvider()),
         ChangeNotifierProvider(create: (_) => ReviewProvider()),
@@ -69,8 +63,9 @@ class MyApp extends StatelessWidget {
   }
 
   Future<void> _checkPendingNotifications(BuildContext context) async {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     final pendingNotifications = await NotificationService().pendingNotificationRequests();
-    if (pendingNotifications.isEmpty) {
+    if (themeProvider.notificationsEnabled && pendingNotifications.isEmpty) {
       await Provider.of<WorkmanagerService>(context, listen: false).runOneOffTask(context);
     }
   }

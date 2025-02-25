@@ -30,7 +30,12 @@ class RestaurantProvider with ChangeNotifier {
 
     try {
       final data = await apiService.getListOfRestaurants(context);
-      _restaurants = Success(data.map((item) => Restaurant.fromJson(item)).toList());
+      _restaurants = Success(
+        data.map((item) {
+          clearRestaurants();
+          return Restaurant.fromJson(item);
+        }).toList(),
+      );
     } catch (e) {
       _restaurants = Error(e.toString());
       if (context != null) {
@@ -96,5 +101,11 @@ class RestaurantProvider with ChangeNotifier {
 
   bool isFavorite(Restaurant restaurant) {
     return _favorites.any((item) => item.id == restaurant.id);
+  }
+
+  // Function to clear the restaurants list
+  void clearRestaurants() {
+    _restaurants = Success([]);
+    notifyListeners();
   }
 }
