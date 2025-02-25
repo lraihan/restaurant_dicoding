@@ -62,11 +62,7 @@ class DatabaseHelper {
 
   Future<void> deleteFavorite(String id) async {
     final db = await database;
-    await db.delete(
-      'favorites',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    await db.delete('favorites', where: 'id = ?', whereArgs: [id]);
   }
 
   Future<List<Restaurant>> getFavorites() async {

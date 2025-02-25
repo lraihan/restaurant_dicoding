@@ -49,14 +49,16 @@ class ApiService {
             errorMessage = 'Internal Server Error';
             break;
           default:
-            errorMessage = 'Received invalid status code: ${error.response?.statusCode}';
+            errorMessage =
+                'Received invalid status code: ${error.response?.statusCode}';
         }
         break;
       case DioExceptionType.cancel:
         errorMessage = 'Request to API server was cancelled';
         break;
       case DioExceptionType.unknown:
-        errorMessage = 'Connection to API server failed due to internet connection';
+        errorMessage =
+            'Connection to API server failed due to internet connection';
         break;
       default:
         errorMessage = 'Unkown Error, please try again';
@@ -95,7 +97,10 @@ class ApiService {
     return [];
   }
 
-  Future<Map<String, dynamic>> getRestaurantDetail(String id, BuildContext? context) async {
+  Future<Map<String, dynamic>> getRestaurantDetail(
+    String id,
+    BuildContext? context,
+  ) async {
     final cacheKey = 'restaurant_detail_$id';
 
     try {
@@ -112,14 +117,20 @@ class ApiService {
       }
     } catch (e) {
       if (context != null) {
-        CustomSnackbar.showSnackbar(context, 'Failed to load restaurant detail: $e');
+        CustomSnackbar.showSnackbar(
+          context,
+          'Failed to load restaurant detail: $e',
+        );
       }
       throw Exception('Failed to load restaurant detail: $e');
     }
     return {};
   }
 
-  Future<List<dynamic>> searchRestaurants(String query, BuildContext? context) async {
+  Future<List<dynamic>> searchRestaurants(
+    String query,
+    BuildContext? context,
+  ) async {
     try {
       final response = await _dio.get('/search?q=$query');
       if (response.statusCode == 200) {
@@ -133,14 +144,22 @@ class ApiService {
       }
     } catch (e) {
       if (context != null) {
-        CustomSnackbar.showSnackbar(context, 'Failed to search restaurants: $e');
+        CustomSnackbar.showSnackbar(
+          context,
+          'Failed to search restaurants: $e',
+        );
       }
       throw Exception('Failed to search restaurants: $e');
     }
     return [];
   }
 
-  Future<List<dynamic>> addReview(String id, String name, String review, BuildContext context) async {
+  Future<List<dynamic>> addReview(
+    String id,
+    String name,
+    String review,
+    BuildContext context,
+  ) async {
     final response = await _dio.post(
       '/review',
       data: {'id': id, 'name': name, 'review': review},
@@ -154,7 +173,10 @@ class ApiService {
     }
   }
 
-  Future<String> getRestaurantPicture(String pictureId, BuildContext context) async {
+  Future<String> getRestaurantPicture(
+    String pictureId,
+    BuildContext context,
+  ) async {
     try {
       final response = await _dio.get('/images/medium/$pictureId');
       if (response.statusCode == 200) {
@@ -165,7 +187,10 @@ class ApiService {
     } on DioException catch (error) {
       _handleError(error, context);
     } catch (e) {
-      CustomSnackbar.showSnackbar(context, 'Failed to load restaurant picture: $e');
+      CustomSnackbar.showSnackbar(
+        context,
+        'Failed to load restaurant picture: $e',
+      );
       throw Exception('Failed to load restaurant picture: $e');
     }
     return '';

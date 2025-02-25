@@ -20,7 +20,8 @@ class RestaurantProvider with ChangeNotifier {
 
   Resource<List<Restaurant>> get restaurants => _restaurants;
   Map<String, dynamic>? get restaurantDetail => _restaurantDetail;
-  Resource<Restaurant> get restaurantDetailResource => _restaurantDetailResource;
+  Resource<Restaurant> get restaurantDetailResource =>
+      _restaurantDetailResource;
   bool get isLoading => _isLoading;
   List<Restaurant> get favorites => _favorites;
 
@@ -47,7 +48,10 @@ class RestaurantProvider with ChangeNotifier {
     }
   }
 
-  Future<void> fetchRestaurantDetail(String restaurantId, BuildContext? context) async {
+  Future<void> fetchRestaurantDetail(
+    String restaurantId,
+    BuildContext? context,
+  ) async {
     _restaurantDetailResource = Loading();
     notifyListeners();
 
@@ -57,7 +61,10 @@ class RestaurantProvider with ChangeNotifier {
     } catch (e) {
       _restaurantDetailResource = Error(e.toString());
       if (context != null) {
-        CustomSnackbar.showSnackbar(context, 'Failed to fetch restaurant details: $e');
+        CustomSnackbar.showSnackbar(
+          context,
+          'Failed to fetch restaurant details: $e',
+        );
       }
     } finally {
       notifyListeners();
@@ -70,11 +77,16 @@ class RestaurantProvider with ChangeNotifier {
 
     try {
       final data = await apiService.searchRestaurants(query, context);
-      _restaurants = Success(data.map((item) => Restaurant.fromJson(item)).toList());
+      _restaurants = Success(
+        data.map((item) => Restaurant.fromJson(item)).toList(),
+      );
     } catch (e) {
       _restaurants = Error(e.toString());
       if (context != null) {
-        CustomSnackbar.showSnackbar(context, 'Failed to search restaurants: $e');
+        CustomSnackbar.showSnackbar(
+          context,
+          'Failed to search restaurants: $e',
+        );
       }
     } finally {
       _isLoading = false;

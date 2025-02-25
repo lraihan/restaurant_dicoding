@@ -10,11 +10,12 @@ class FavoriteRestaurants extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Favorite Restaurants'),
-      ),
+      appBar: AppBar(title: Text('Favorite Restaurants')),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: horizontalPadding(context), vertical: verticalPadding(context)),
+        padding: EdgeInsets.symmetric(
+          horizontal: horizontalPadding(context),
+          vertical: verticalPadding(context),
+        ),
         child: Consumer<RestaurantProvider>(
           builder: (context, restaurantProvider, child) {
             final favorites = restaurantProvider.favorites;

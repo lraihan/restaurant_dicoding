@@ -12,18 +12,22 @@ class SearchResult extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final restaurantProvider = Provider.of<RestaurantProvider>(context, listen: false);
+    final restaurantProvider = Provider.of<RestaurantProvider>(
+      context,
+      listen: false,
+    );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       restaurantProvider.searchRestaurants(query, context);
     });
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Search Results'),
-      ),
+      appBar: AppBar(title: Text('Search Results')),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: horizontalPadding(context), vertical: verticalPadding(context)),
+        padding: EdgeInsets.symmetric(
+          horizontal: horizontalPadding(context),
+          vertical: verticalPadding(context),
+        ),
         child: Consumer<RestaurantProvider>(
           builder: (context, restaurantProvider, child) {
             final resource = restaurantProvider.restaurants;

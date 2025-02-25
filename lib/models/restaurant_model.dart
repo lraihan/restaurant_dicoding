@@ -6,15 +6,11 @@ class Category {
   Category({this.name});
 
   factory Category.fromJson(Map<String, dynamic> json) {
-    return Category(
-      name: json['name'] as String?,
-    );
+    return Category(name: json['name'] as String?);
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-    };
+    return {'name': name};
   }
 }
 
@@ -24,15 +20,11 @@ class MenuItem {
   MenuItem({this.name});
 
   factory MenuItem.fromJson(Map<String, dynamic> json) {
-    return MenuItem(
-      name: json['name'] as String?,
-    );
+    return MenuItem(name: json['name'] as String?);
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-    };
+    return {'name': name};
   }
 }
 
@@ -44,9 +36,14 @@ class Menus {
 
   factory Menus.fromJson(Map<String, dynamic> json) {
     return Menus(
-      foods: (json['foods'] as List<dynamic>?)?.map((item) => MenuItem.fromJson(item as Map<String, dynamic>)).toList(),
+      foods:
+          (json['foods'] as List<dynamic>?)
+              ?.map((item) => MenuItem.fromJson(item as Map<String, dynamic>))
+              .toList(),
       drinks:
-          (json['drinks'] as List<dynamic>?)?.map((item) => MenuItem.fromJson(item as Map<String, dynamic>)).toList(),
+          (json['drinks'] as List<dynamic>?)
+              ?.map((item) => MenuItem.fromJson(item as Map<String, dynamic>))
+              .toList(),
     );
   }
 
@@ -74,11 +71,7 @@ class CustomerReview {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'review': review,
-      'date': date,
-    };
+    return {'name': name, 'review': review, 'date': date};
   }
 }
 
@@ -116,29 +109,49 @@ class Restaurant {
       city: json['city'] as String?,
       address: json['address'] as String?,
       rating: (json['rating'] as num?)?.toDouble(),
-      categories: json['categories'] != null
-          ? (json['categories'] is String
-              ? (jsonDecode(json['categories'] as String) as List<dynamic>?)
-                  ?.map((item) => Category.fromJson(item as Map<String, dynamic>))
-                  .toList()
-              : (json['categories'] as List<dynamic>?)
-                  ?.map((item) => Category.fromJson(item as Map<String, dynamic>))
-                  .toList())
-          : null,
-      menus: json['menus'] != null
-          ? (json['menus'] is String
-              ? Menus.fromJson(jsonDecode(json['menus'] as String) as Map<String, dynamic>)
-              : Menus.fromJson(json['menus'] as Map<String, dynamic>))
-          : null,
-      customerReviews: json['customerReviews'] != null
-          ? (json['customerReviews'] is String
-              ? (jsonDecode(json['customerReviews'] as String) as List<dynamic>?)
-                  ?.map((item) => CustomerReview.fromJson(item as Map<String, dynamic>))
-                  .toList()
-              : (json['customerReviews'] as List<dynamic>?)
-                  ?.map((item) => CustomerReview.fromJson(item as Map<String, dynamic>))
-                  .toList())
-          : null,
+      categories:
+          json['categories'] != null
+              ? (json['categories'] is String
+                  ? (jsonDecode(json['categories'] as String) as List<dynamic>?)
+                      ?.map(
+                        (item) =>
+                            Category.fromJson(item as Map<String, dynamic>),
+                      )
+                      .toList()
+                  : (json['categories'] as List<dynamic>?)
+                      ?.map(
+                        (item) =>
+                            Category.fromJson(item as Map<String, dynamic>),
+                      )
+                      .toList())
+              : null,
+      menus:
+          json['menus'] != null
+              ? (json['menus'] is String
+                  ? Menus.fromJson(
+                    jsonDecode(json['menus'] as String) as Map<String, dynamic>,
+                  )
+                  : Menus.fromJson(json['menus'] as Map<String, dynamic>))
+              : null,
+      customerReviews:
+          json['customerReviews'] != null
+              ? (json['customerReviews'] is String
+                  ? (jsonDecode(json['customerReviews'] as String)
+                          as List<dynamic>?)
+                      ?.map(
+                        (item) => CustomerReview.fromJson(
+                          item as Map<String, dynamic>,
+                        ),
+                      )
+                      .toList()
+                  : (json['customerReviews'] as List<dynamic>?)
+                      ?.map(
+                        (item) => CustomerReview.fromJson(
+                          item as Map<String, dynamic>,
+                        ),
+                      )
+                      .toList())
+              : null,
     );
   }
 
@@ -151,9 +164,13 @@ class Restaurant {
       'city': city,
       'address': address,
       'rating': rating,
-      'categories': jsonEncode(categories?.map((item) => item.toJson()).toList()),
+      'categories': jsonEncode(
+        categories?.map((item) => item.toJson()).toList(),
+      ),
       'menus': jsonEncode(menus?.toJson()),
-      'customerReviews': jsonEncode(customerReviews?.map((item) => item.toJson()).toList()),
+      'customerReviews': jsonEncode(
+        customerReviews?.map((item) => item.toJson()).toList(),
+      ),
     };
   }
 }

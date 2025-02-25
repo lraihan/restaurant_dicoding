@@ -9,24 +9,20 @@ ThemeData buildTheme(Brightness brightness, ThemeProvider provider) {
     shadowColor: primaryColor.withValues(alpha: 0.2),
     cardTheme: CardTheme(
       elevation: 10,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       shadowColor: primaryColor.withValues(alpha: 0.2),
     ),
     useMaterial3: true,
-    colorScheme: provider.useSeedColor
-        ? ColorScheme.fromSeed(
-            seedColor: provider.seedColor,
-            brightness: brightness,
-          )
-        : ColorScheme.fromSwatch(
-            accentColor: secondaryColor,
-            brightness: brightness,
-          ).copyWith(
-            primary: primaryColor,
-            secondary: secondaryColor,
-          ),
+    colorScheme:
+        provider.useSeedColor
+            ? ColorScheme.fromSeed(
+              seedColor: provider.seedColor,
+              brightness: brightness,
+            )
+            : ColorScheme.fromSwatch(
+              accentColor: secondaryColor,
+              brightness: brightness,
+            ).copyWith(primary: primaryColor, secondary: secondaryColor),
     fontFamily: 'PlusJakartaSans',
     textTheme: const TextTheme(
       displayLarge: AppTextStyle.heading1,

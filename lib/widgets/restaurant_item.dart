@@ -11,7 +11,12 @@ class RestaurantItem extends StatelessWidget {
   final String heroTag;
   final VoidCallback? onDelete;
 
-  const RestaurantItem({super.key, required this.restaurant, required this.heroTag, this.onDelete});
+  const RestaurantItem({
+    super.key,
+    required this.restaurant,
+    required this.heroTag,
+    this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +26,13 @@ class RestaurantItem extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => RestaurantDetail(restaurantId: restaurant.id!, heroTag: heroTag)),
+          MaterialPageRoute(
+            builder:
+                (context) => RestaurantDetail(
+                  restaurantId: restaurant.id!,
+                  heroTag: heroTag,
+                ),
+          ),
         );
       },
       child: Container(
@@ -54,16 +65,25 @@ class RestaurantItem extends StatelessWidget {
                                     size: screenWidth(context) * .3,
                                   );
                                 },
-                                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                loadingBuilder: (
+                                  BuildContext context,
+                                  Widget child,
+                                  ImageChunkEvent? loadingProgress,
+                                ) {
                                   if (loadingProgress == null) {
                                     return child;
                                   } else {
                                     return Center(
                                       child: CircularProgressIndicator(
                                         value:
-                                            loadingProgress.expectedTotalBytes != null
-                                                ? loadingProgress.cumulativeBytesLoaded /
-                                                    (loadingProgress.expectedTotalBytes ?? 1)
+                                            loadingProgress
+                                                        .expectedTotalBytes !=
+                                                    null
+                                                ? loadingProgress
+                                                        .cumulativeBytesLoaded /
+                                                    (loadingProgress
+                                                            .expectedTotalBytes ??
+                                                        1)
                                                 : null,
                                       ),
                                     );
@@ -83,14 +103,27 @@ class RestaurantItem extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
-                              width: screenWidth(context) * .37,
-                              child: Text(restaurant.name ?? '-', style: Theme.of(context).textTheme.titleMedium),
+                              width:
+                                  onDelete != null
+                                      ? screenWidth(context) * .35
+                                      : screenWidth(context) * .37,
+                              child: Text(
+                                restaurant.name ?? '-',
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
                             ),
                             Row(
                               children: [
-                                Icon(Icons.location_pin, color: themeProvider.seedColor, size: 16),
+                                Icon(
+                                  Icons.location_pin,
+                                  color: themeProvider.seedColor,
+                                  size: 16,
+                                ),
                                 SizedBox(width: 4),
-                                Text(restaurant.city ?? '-', style: Theme.of(context).textTheme.bodyMedium),
+                                Text(
+                                  restaurant.city ?? '-',
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
                               ],
                             ),
                           ],
@@ -99,14 +132,20 @@ class RestaurantItem extends StatelessWidget {
                         Row(
                           children: [
                             Icon(Icons.star, color: Colors.amber, size: 20),
-                            Text(restaurant.rating.toString(), style: Theme.of(context).textTheme.titleSmall),
+                            Text(
+                              restaurant.rating.toString(),
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
                           ],
                         ),
                       ],
                     ),
                   ),
                   if (onDelete != null)
-                    IconButton(icon: Icon(Icons.close, color: errorColor, size: 20), onPressed: onDelete),
+                    IconButton(
+                      icon: Icon(Icons.close, color: errorColor, size: 20),
+                      onPressed: onDelete,
+                    ),
                 ],
               ),
             ),

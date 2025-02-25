@@ -27,12 +27,18 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<RestaurantProvider>(context, listen: false).fetchRestaurantDetail(widget.restaurantId, context);
+      Provider.of<RestaurantProvider>(
+        context,
+        listen: false,
+      ).fetchRestaurantDetail(widget.restaurantId, context);
     });
   }
 
   Future<void> _refreshData(BuildContext context) async {
-    await Provider.of<RestaurantProvider>(context, listen: false).fetchRestaurantDetail(widget.restaurantId, context);
+    await Provider.of<RestaurantProvider>(
+      context,
+      listen: false,
+    ).fetchRestaurantDetail(widget.restaurantId, context);
   }
 
   @override
@@ -95,15 +101,26 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
                               ),
                               Consumer<RestaurantProvider>(
                                 builder: (context, provider, child) {
-                                  final resource = provider.restaurantDetailResource;
+                                  final resource =
+                                      provider.restaurantDetailResource;
 
                                   if (resource is Success) {
-                                    final restaurant = (resource as Success<Restaurant>).data;
-                                    final isFavorite = provider.isFavorite(restaurant);
+                                    final restaurant =
+                                        (resource as Success<Restaurant>).data;
+                                    final isFavorite = provider.isFavorite(
+                                      restaurant,
+                                    );
 
                                     return IconButton(
-                                      icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border),
-                                      color: isFavorite ? themeProvider.seedColor : null,
+                                      icon: Icon(
+                                        isFavorite
+                                            ? Icons.favorite
+                                            : Icons.favorite_border,
+                                      ),
+                                      color:
+                                          isFavorite
+                                              ? themeProvider.seedColor
+                                              : null,
                                       onPressed: () {
                                         if (isFavorite) {
                                           provider.removeFavorite(restaurant);
@@ -144,46 +161,37 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
                               ),
                             ],
                           ),
-                          SizedBox(
-                            height: verticalPadding(context),
-                          ),
+                          SizedBox(height: verticalPadding(context)),
                           Text(
                             'Description',
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
-                          SizedBox(
-                            height: verticalPadding(context) * .5,
-                          ),
+                          SizedBox(height: verticalPadding(context) * .5),
                           Text(
                             restaurant.description ?? '-',
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
-                          SizedBox(
-                            height: verticalPadding(context),
-                          ),
+                          SizedBox(height: verticalPadding(context)),
                           Text(
                             'Menus',
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
-                          SizedBox(
-                            height: verticalPadding(context) * .5,
-                          ),
+                          SizedBox(height: verticalPadding(context) * .5),
                           Text(
                             'Foods:',
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
-                          SizedBox(
-                            height: verticalPadding(context) * .5,
-                          ),
+                          SizedBox(height: verticalPadding(context) * .5),
                           GridView.builder(
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 8.0,
-                              mainAxisSpacing: 8.0,
-                              childAspectRatio: 3,
-                            ),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 8.0,
+                                  mainAxisSpacing: 8.0,
+                                  childAspectRatio: 3,
+                                ),
                             itemCount: restaurant.menus?.foods?.length ?? 0,
                             itemBuilder: (context, index) {
                               final food = restaurant.menus!.foods![index];
@@ -194,32 +202,32 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
                                   child: Center(
                                     child: Text(
                                       food.name ?? '-',
-                                      style: Theme.of(context).textTheme.headlineSmall,
+                                      style:
+                                          Theme.of(
+                                            context,
+                                          ).textTheme.headlineSmall,
                                     ),
                                   ),
                                 ),
                               );
                             },
                           ),
-                          SizedBox(
-                            height: verticalPadding(context),
-                          ),
+                          SizedBox(height: verticalPadding(context)),
                           Text(
                             'Drinks:',
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
-                          SizedBox(
-                            height: verticalPadding(context) * .5,
-                          ),
+                          SizedBox(height: verticalPadding(context) * .5),
                           GridView.builder(
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 8.0,
-                              mainAxisSpacing: 8.0,
-                              childAspectRatio: 3,
-                            ),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 8.0,
+                                  mainAxisSpacing: 8.0,
+                                  childAspectRatio: 3,
+                                ),
                             itemCount: restaurant.menus?.drinks?.length ?? 0,
                             itemBuilder: (context, index) {
                               final drink = restaurant.menus!.drinks![index];
@@ -230,23 +238,22 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
                                   child: Center(
                                     child: Text(
                                       drink.name ?? '-',
-                                      style: Theme.of(context).textTheme.headlineSmall,
+                                      style:
+                                          Theme.of(
+                                            context,
+                                          ).textTheme.headlineSmall,
                                     ),
                                   ),
                                 ),
                               );
                             },
                           ),
-                          SizedBox(
-                            height: verticalPadding(context),
-                          ),
+                          SizedBox(height: verticalPadding(context)),
                           Text(
                             'Customer Reviews',
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
-                          SizedBox(
-                            height: verticalPadding(context) * .5,
-                          ),
+                          SizedBox(height: verticalPadding(context) * .5),
                           ListView.builder(
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
@@ -258,21 +265,31 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         review.name ?? '-',
-                                        style: Theme.of(context).textTheme.titleSmall,
+                                        style:
+                                            Theme.of(
+                                              context,
+                                            ).textTheme.titleSmall,
                                       ),
                                       SizedBox(height: 4),
                                       Text(
                                         review.review ?? '-',
-                                        style: Theme.of(context).textTheme.bodyMedium,
+                                        style:
+                                            Theme.of(
+                                              context,
+                                            ).textTheme.bodyMedium,
                                       ),
                                       SizedBox(height: 4),
                                       Text(
                                         review.date ?? '-',
-                                        style: Theme.of(context).textTheme.bodySmall,
+                                        style:
+                                            Theme.of(
+                                              context,
+                                            ).textTheme.bodySmall,
                                       ),
                                     ],
                                   ),
@@ -280,24 +297,23 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
                               );
                             },
                           ),
-                          SizedBox(
-                            height: verticalPadding(context),
-                          ),
+                          SizedBox(height: verticalPadding(context)),
                           Center(
                             child: ElevatedButton(
                               onPressed: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => ChangeNotifierProvider(
-                                      create: (_) => ReviewProvider(),
-                                      child: AddReviewScreen(
-                                        restaurantId: widget.restaurantId,
-                                        onReviewAdded: () {
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                    ),
+                                    builder:
+                                        (context) => ChangeNotifierProvider(
+                                          create: (_) => ReviewProvider(),
+                                          child: AddReviewScreen(
+                                            restaurantId: widget.restaurantId,
+                                            onReviewAdded: () {
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                        ),
                                   ),
                                 );
                               },

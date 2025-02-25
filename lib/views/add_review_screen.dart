@@ -7,7 +7,11 @@ class AddReviewScreen extends StatelessWidget {
   final String restaurantId;
   final VoidCallback onReviewAdded;
 
-  const AddReviewScreen({super.key, required this.restaurantId, required this.onReviewAdded});
+  const AddReviewScreen({
+    super.key,
+    required this.restaurantId,
+    required this.onReviewAdded,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +22,7 @@ class AddReviewScreen extends StatelessWidget {
     final formKey = GlobalKey<FormState>();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Add Review'),
-      ),
+      appBar: AppBar(title: Text('Add Review')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -59,21 +61,23 @@ class AddReviewScreen extends StatelessWidget {
               reviewProvider.isLoading
                   ? CircularProgressIndicator()
                   : ElevatedButton(
-                      onPressed: () async {
-                        if (formKey.currentState!.validate()) {
-                          await reviewProvider.addReview(
-                            restaurantId,
-                            nameController.text,
-                            reviewController.text,
-                            context,
-                          );
-                          onReviewAdded();
-                          await Provider.of<RestaurantProvider>(context, listen: false)
-                              .fetchRestaurantDetail(restaurantId, context);
-                        }
-                      },
-                      child: Text('Submit'),
-                    ),
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                        await reviewProvider.addReview(
+                          restaurantId,
+                          nameController.text,
+                          reviewController.text,
+                          context,
+                        );
+                        onReviewAdded();
+                        await Provider.of<RestaurantProvider>(
+                          context,
+                          listen: false,
+                        ).fetchRestaurantDetail(restaurantId, context);
+                      }
+                    },
+                    child: Text('Submit'),
+                  ),
             ],
           ),
         ),

@@ -24,7 +24,8 @@ class ColorPickerDialog extends StatelessWidget {
             content: SingleChildScrollView(
               child: BlockPicker(
                 pickerColor: colorPickerProvider.selectedColor,
-                onColorChanged: (color) => colorPickerProvider.setSelectedColor(color),
+                onColorChanged:
+                    (color) => colorPickerProvider.setSelectedColor(color),
               ),
             ),
             actions: [

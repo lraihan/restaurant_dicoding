@@ -13,13 +13,16 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await NotificationService().init();
 
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
   final NotificationAppLaunchDetails? notificationAppLaunchDetails =
       await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
   if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
   } else {
     await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin
+        >()
         ?.requestPermissions(alert: true, badge: true, sound: true);
   }
 
@@ -64,12 +67,16 @@ class MyApp extends StatelessWidget {
 
   Future<void> _checkPendingNotifications(BuildContext context) async {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    final pendingNotifications = await NotificationService().pendingNotificationRequests();
+    final pendingNotifications =
+        await NotificationService().pendingNotificationRequests();
     if (themeProvider.notificationsEnabled && pendingNotifications.isEmpty) {
       await Provider.of<WorkmanagerService>(
         context,
         listen: false,
-      ).runPeriodicTask(themeProvider.notificationTime.hour, themeProvider.notificationTime.minute);
+      ).runPeriodicTask(
+        themeProvider.notificationTime.hour,
+        themeProvider.notificationTime.minute,
+      );
     }
   }
 }

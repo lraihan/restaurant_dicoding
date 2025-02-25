@@ -10,17 +10,29 @@ void callbackDispatcher() {
     await NotificationService().init();
 
     final dio = Dio();
-    final restaurants = await dio.get('https://restaurant-api.dicoding.dev/list');
-    final randomRestaurant = restaurants.data['restaurants'][Random().nextInt(restaurants.data['restaurants'].length)];
+    final restaurants = await dio.get(
+      'https://restaurant-api.dicoding.dev/list',
+    );
+    final randomRestaurant =
+        restaurants.data['restaurants'][Random().nextInt(
+          restaurants.data['restaurants'].length,
+        )];
     final restaurantName = randomRestaurant['name'];
     final restaurantAddress = randomRestaurant['city'];
 
     final now = DateTime.now();
     final scheduledHour = inputData!['hour'];
     final scheduledMinute = inputData['minute'];
-    final scheduledTime = DateTime(now.year, now.month, now.day, scheduledHour, scheduledMinute);
+    final scheduledTime = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      scheduledHour,
+      scheduledMinute,
+    );
 
-    if (now.isAfter(scheduledTime) && now.isBefore(scheduledTime.add(Duration(hours: 1)))) {
+    if (now.isAfter(scheduledTime) &&
+        now.isBefore(scheduledTime.add(Duration(hours: 1)))) {
       await NotificationService().showNotification(
         restaurantName: restaurantName,
         restaurantAddress: restaurantAddress,
@@ -34,7 +46,8 @@ void callbackDispatcher() {
 class WorkmanagerService {
   final Workmanager _workmanager;
 
-  WorkmanagerService([Workmanager? workmanager]) : _workmanager = workmanager ??= Workmanager();
+  WorkmanagerService([Workmanager? workmanager])
+    : _workmanager = workmanager ??= Workmanager();
 
   Future<void> init() async {
     await _workmanager.initialize(callbackDispatcher, isInDebugMode: true);
@@ -56,7 +69,11 @@ class WorkmanagerService {
       MyWorkmanager.periodic.taskName,
       frequency: const Duration(minutes: 16),
       initialDelay: Duration.zero,
-      inputData: {"data": "This is a valid payload from periodic task workmanager", "hour": hour, "minute": minute},
+      inputData: {
+        "data": "This is a valid payload from periodic task workmanager",
+        "hour": hour,
+        "minute": minute,
+      },
     );
   }
 

@@ -6,7 +6,8 @@ import 'package:timezone/data/latest.dart' as tz;
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   factory NotificationService() {
     return _instance;
@@ -16,46 +17,62 @@ class NotificationService {
 
   Future<void> init() async {
     configureLocalTimeZone();
-    const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings(
-      '@mipmap/ic_launcher',
-    );
-    const InitializationSettings initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-    );
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    const InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
   Future<void> requestPermission(BuildContext context) async {
     final bool? notificationGranted =
         await flutterLocalNotificationsPlugin
-            .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+            .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin
+            >()
             ?.requestNotificationsPermission();
     if (notificationGranted == null || !notificationGranted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Notification permission is required to show lunch notifications.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Notification permission is required to show lunch notifications.',
+          ),
+        ),
+      );
     }
     final bool? scheduleGranted =
         await flutterLocalNotificationsPlugin
-            .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+            .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin
+            >()
             ?.requestExactAlarmsPermission();
     if (scheduleGranted == null || !scheduleGranted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Alarms Notification permission is required to show lunch notifications.')),
+        SnackBar(
+          content: Text(
+            'Alarms Notification permission is required to show lunch notifications.',
+          ),
+        ),
       );
     }
   }
 
-  Future<void> showNotification({required String restaurantName, required String restaurantAddress}) async {
-    const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      '1',
-      'lunch notification',
-      importance: Importance.max,
-      priority: Priority.high,
-      showWhen: true,
-    );
+  Future<void> showNotification({
+    required String restaurantName,
+    required String restaurantAddress,
+  }) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+          '1',
+          'lunch notification',
+          importance: Importance.max,
+          priority: Priority.high,
+          showWhen: true,
+        );
 
-    const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+    );
     await flutterLocalNotificationsPlugin.show(
       0,
       'Lunch Time Reminder',
@@ -73,7 +90,14 @@ class NotificationService {
 
   tz.TZDateTime _nextScheduled(TimeOfDay time) {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
-    tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, now.year, now.month, now.day, time.hour, time.minute);
+    tz.TZDateTime scheduledDate = tz.TZDateTime(
+      tz.local,
+      now.year,
+      now.month,
+      now.day,
+      time.hour,
+      time.minute,
+    );
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
@@ -98,7 +122,10 @@ class NotificationService {
     String channelId = "3",
     String channelName = "Schedule Notification",
   }) async {
-    TimeOfDay scheduledTime = TimeOfDay(hour: int.parse(time.split(":")[0]), minute: int.parse(time.split(":")[1]));
+    TimeOfDay scheduledTime = TimeOfDay(
+      hour: int.parse(time.split(":")[0]),
+      minute: int.parse(time.split(":")[1]),
+    );
 
     final androidPlatformChannelSpecifics = AndroidNotificationDetails(
       channelId,
@@ -123,7 +150,8 @@ class NotificationService {
       datetimeSchedule,
       notificationDetails,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.wallClockTime,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.wallClockTime,
       matchDateTimeComponents: DateTimeComponents.time,
     );
   }

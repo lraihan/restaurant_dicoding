@@ -56,7 +56,6 @@ flutter:
     - assets/fonts/PlusJakartaSans-Regular.ttf
     - assets/fonts/PlusJakartaSans-SemiBold.ttf
     - assets/fonts/PlusJakartaSans-SemiBoldItalic.ttf
-    - assets/images/
 
   fonts:
     - family: PlusJakartaSans

@@ -80,8 +80,6 @@ void main() {
 
     await provider.addFavorite(restaurant);
 
-    print(provider.favorites);
-
     expect(provider.favorites, contains(restaurant));
   });
 }

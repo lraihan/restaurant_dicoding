@@ -7,7 +7,12 @@ class ReviewProvider with ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-  Future<void> addReview(String restaurantId, String name, String review, BuildContext context) async {
+  Future<void> addReview(
+    String restaurantId,
+    String name,
+    String review,
+    BuildContext context,
+  ) async {
     _isLoading = true;
     notifyListeners();
 
