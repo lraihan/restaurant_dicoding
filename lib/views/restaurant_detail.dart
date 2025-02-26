@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:restaurant_app_dicoding/models/resource.dart';
 import 'package:restaurant_app_dicoding/providers/restaurant_provider.dart';
 import 'package:restaurant_app_dicoding/providers/review_provider.dart';
 import 'package:restaurant_app_dicoding/models/restaurant_model.dart';
 import 'package:restaurant_app_dicoding/providers/theme_provider.dart';
 import 'package:restaurant_app_dicoding/shared/consts.dart';
 import 'package:restaurant_app_dicoding/views/add_review_screen.dart';
-import '../models/resource.dart';
 
 class RestaurantDetail extends StatefulWidget {
   final String restaurantId;

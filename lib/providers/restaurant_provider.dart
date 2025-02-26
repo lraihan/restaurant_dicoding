@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant_app_dicoding/models/resource.dart';
 import 'package:restaurant_app_dicoding/services/api_services.dart';
 import 'package:restaurant_app_dicoding/models/restaurant_model.dart';
 import 'package:restaurant_app_dicoding/widgets/snackbar.dart';
 import 'package:restaurant_app_dicoding/services/database_helper.dart';
-import '../models/resource.dart';
 
 class RestaurantProvider with ChangeNotifier {
   ApiService apiService = ApiService();

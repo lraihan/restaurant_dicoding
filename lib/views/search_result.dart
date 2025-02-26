@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:restaurant_app_dicoding/models/resource.dart';
 import 'package:restaurant_app_dicoding/providers/restaurant_provider.dart';
 import 'package:restaurant_app_dicoding/shared/consts.dart';
 import 'package:restaurant_app_dicoding/widgets/restaurant_item.dart';
-import '../models/resource.dart';
 
 class SearchResult extends StatelessWidget {
   final String query;

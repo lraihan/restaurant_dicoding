@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:restaurant_app_dicoding/models/resource.dart';
 import 'package:restaurant_app_dicoding/providers/restaurant_provider.dart';
 import 'package:restaurant_app_dicoding/providers/theme_provider.dart';
 import 'package:restaurant_app_dicoding/shared/consts.dart';
 import 'package:restaurant_app_dicoding/views/search_result.dart';
 import 'package:restaurant_app_dicoding/widgets/color_picker_dialog.dart';
-import '../models/resource.dart';
 import 'package:restaurant_app_dicoding/views/favorite_restaurants.dart';
 import 'package:restaurant_app_dicoding/services/notification_service.dart';
 import 'package:restaurant_app_dicoding/widgets/restaurant_item.dart';

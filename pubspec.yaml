@@ -30,6 +30,7 @@ dependencies:
   timezone: ^0.10.0
   sqflite_common_ffi: ^2.3.4+4
   path_provider_platform_interface: ^2.1.2
+  cached_network_image: ^3.4.1
 
 dev_dependencies:
   test: ^1.25.2

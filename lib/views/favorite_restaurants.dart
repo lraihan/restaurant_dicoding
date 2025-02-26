@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:restaurant_app_dicoding/providers/restaurant_provider.dart';
 import 'package:restaurant_app_dicoding/shared/consts.dart';
 import 'package:restaurant_app_dicoding/widgets/restaurant_item.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class FavoriteRestaurants extends StatelessWidget {
   const FavoriteRestaurants({super.key});
@@ -12,10 +13,7 @@ class FavoriteRestaurants extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Favorite Restaurants')),
       body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: horizontalPadding(context),
-          vertical: verticalPadding(context),
-        ),
+        padding: EdgeInsets.symmetric(horizontal: horizontalPadding(context), vertical: verticalPadding(context)),
         child: Consumer<RestaurantProvider>(
           builder: (context, restaurantProvider, child) {
             final favorites = restaurantProvider.favorites;
@@ -34,6 +32,13 @@ class FavoriteRestaurants extends StatelessWidget {
                   heroTag: heroTag,
                   onDelete: () {
                     restaurantProvider.removeFavorite(restaurant);
+                  },
+                  imageBuilder: (context, imageUrl) {
+                    return CachedNetworkImage(
+                      imageUrl: imageUrl,
+                      placeholder: (context, url) => CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    );
                   },
                 );
               },
